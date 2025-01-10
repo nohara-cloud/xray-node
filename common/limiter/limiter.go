@@ -23,7 +23,7 @@ import (
 )
 
 type UserInfo struct {
-	UID         int
+	UID         string
 	SpeedLimit  uint64
 	DeviceLimit int
 }
@@ -146,7 +146,7 @@ func (l *Limiter) GetOnlineDevice(tag string) (*[]api.OnlineUser, error) {
 			email := key.(string)
 			ipMap := value.(*sync.Map)
 			ipMap.Range(func(key, value interface{}) bool {
-				uid := value.(int)
+				uid := value.(string)
 				ip := key.(string)
 				onlineUser = append(onlineUser, api.OnlineUser{UID: uid, IP: ip})
 				return true
@@ -164,8 +164,9 @@ func (l *Limiter) GetOnlineDevice(tag string) (*[]api.OnlineUser, error) {
 func (l *Limiter) GetUserBucket(tag string, email string, ip string) (limiter *rate.Limiter, SpeedLimit bool, Reject bool) {
 	if value, ok := l.InboundInfo.Load(tag); ok {
 		var (
-			userLimit        uint64 = 0
-			deviceLimit, uid int
+			userLimit   uint64 = 0
+			deviceLimit int
+			uid         string
 		)
 
 		inboundInfo := value.(*InboundInfo)
@@ -225,7 +226,7 @@ func (l *Limiter) GetUserBucket(tag string, email string, ip string) (limiter *r
 }
 
 // Global device limit
-func globalLimit(inboundInfo *InboundInfo, email string, uid int, ip string, deviceLimit int) bool {
+func globalLimit(inboundInfo *InboundInfo, email string, uid string, ip string, deviceLimit int) bool {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inboundInfo.GlobalLimit.config.Timeout)*time.Second)
 	defer cancel()
@@ -233,18 +234,18 @@ func globalLimit(inboundInfo *InboundInfo, email string, uid int, ip string, dev
 	// reformat email for unique key
 	uniqueKey := strings.Replace(email, inboundInfo.Tag, strconv.Itoa(deviceLimit), 1)
 
-	v, err := inboundInfo.GlobalLimit.globalOnlineIP.Get(ctx, uniqueKey, new(map[string]int))
+	v, err := inboundInfo.GlobalLimit.globalOnlineIP.Get(ctx, uniqueKey, new(map[string]string))
 	if err != nil {
 		if _, ok := err.(*store.NotFound); ok {
 			// If the email is a new device
-			go pushIP(inboundInfo, uniqueKey, &map[string]int{ip: uid})
+			go pushIP(inboundInfo, uniqueKey, &map[string]string{ip: uid})
 		} else {
 			errors.LogErrorInner(context.Background(), err, "cache service")
 		}
 		return false
 	}
 
-	ipMap := v.(*map[string]int)
+	ipMap := v.(*map[string]string)
 	// Reject device reach limit directly
 	if deviceLimit > 0 && len(*ipMap) > deviceLimit {
 		return true
@@ -260,7 +261,7 @@ func globalLimit(inboundInfo *InboundInfo, email string, uid int, ip string, dev
 }
 
 // push the ip to cache
-func pushIP(inboundInfo *InboundInfo, uniqueKey string, ipMap *map[string]int) {
+func pushIP(inboundInfo *InboundInfo, uniqueKey string, ipMap *map[string]string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inboundInfo.GlobalLimit.config.Timeout)*time.Second)
 	defer cancel()
 

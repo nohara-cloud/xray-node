@@ -7,7 +7,6 @@ import (
 	"os"
 	"reflect"
 	"regexp"
-	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -21,7 +20,7 @@ import (
 type APIClient struct {
 	client        *resty.Client
 	APIHost       string
-	NodeID        int
+	NodeID        string
 	Key           string
 	NodeType      string
 	EnableVless   bool
@@ -139,11 +138,11 @@ func (c *APIClient) parseResponse(res *resty.Response, path string, err error) (
 
 // GetNodeInfo will pull NodeInfo Config from sspanel
 func (c *APIClient) GetNodeInfo() (nodeInfo *api.NodeInfo, err error) {
-	path := fmt.Sprintf("/api/node")
+	path := fmt.Sprintf("/api/node/config")
 	var nodeType = ""
 	switch c.NodeType {
 	case "Shadowsocks":
-		nodeType = "ss"
+		nodeType = "shadowsockets"
 	case "V2ray":
 		nodeType = "v2ray"
 	case "Trojan":
@@ -154,8 +153,9 @@ func (c *APIClient) GetNodeInfo() (nodeInfo *api.NodeInfo, err error) {
 	// body := fmt.Sprintf(`{"type":"%s", "nodeId":%d}`, nodeType, c.NodeID)
 	res, err := c.client.R().
 		SetQueryParams(map[string]string{
-			"type":   nodeType,
-			"nodeId": strconv.Itoa(c.NodeID),
+			"type":       nodeType,
+			"node_id":    c.NodeID,
+			"secret_key": c.Key,
 		}).
 		SetResult(&Response{}).
 		ForceContentType("application/json").
@@ -192,7 +192,7 @@ func (c *APIClient) GetNodeInfo() (nodeInfo *api.NodeInfo, err error) {
 
 // GetUserList will pull user form sspanel
 func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
-	path := "/api/users"
+	path := "/api/node/user"
 	var nodeType = ""
 	switch c.NodeType {
 	case "Shadowsocks":
@@ -206,9 +206,9 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 	}
 	res, err := c.client.R().
 		SetQueryParams(map[string]string{
-			"type":   nodeType,
-			"nodeId": strconv.Itoa(c.NodeID),
-			"all":    "true",
+			"type":       nodeType,
+			"node_d":     c.NodeID,
+			"secret_key": c.Key,
 		}).
 		SetResult(&Response{}).
 		ForceContentType("application/json").
@@ -254,7 +254,7 @@ func (c *APIClient) ReportNodeOnlineUsers(onlineUserList *[]api.OnlineUser) erro
 		data[i] = OnlineUser{UID: user.UID, IP: user.IP}
 	}
 	postData := &PostData{Type: nodeType, NodeId: c.NodeID, Onlines: data}
-	path := "/api/online"
+	path := "/api/node/user/online"
 
 	res, err := c.client.R().
 		SetHeader("Content-Type", "application/json").
@@ -292,7 +292,7 @@ func (c *APIClient) ReportUserTraffic(userTraffic *[]api.UserTraffic) error {
 		}
 	}
 	postData := &PostData{Type: nodeType, NodeId: c.NodeID, Users: data}
-	path := "/api/traffic"
+	path := "/api/node/user/traffic"
 
 	res, err := c.client.R().
 		SetHeader("Content-Type", "application/json").
@@ -310,46 +310,47 @@ func (c *APIClient) ReportUserTraffic(userTraffic *[]api.UserTraffic) error {
 
 // GetNodeRule will pull the audit rule form pmpanel
 func (c *APIClient) GetNodeRule() (*[]api.DetectRule, error) {
-	ruleList := c.LocalRuleList
-	path := "/api/rules"
-	var nodeType = ""
-	switch c.NodeType {
-	case "Shadowsocks":
-		nodeType = "ss"
-	case "V2ray":
-		nodeType = "v2ray"
-	case "Trojan":
-		nodeType = "trojan"
-	default:
-		return nil, fmt.Errorf("NodeType Error: %s", c.NodeType)
-	}
-	res, err := c.client.R().
-		SetQueryParams(map[string]string{
-			"type":   nodeType,
-			"nodeId": strconv.Itoa(c.NodeID),
-		}).
-		SetResult(&Response{}).
-		ForceContentType("application/json").
-		Get(path)
+	return nil, nil
+	// ruleList := c.LocalRuleList
+	// path := "/api/rules"
+	// var nodeType = ""
+	// switch c.NodeType {
+	// case "Shadowsocks":
+	// 	nodeType = "ss"
+	// case "V2ray":
+	// 	nodeType = "v2ray"
+	// case "Trojan":
+	// 	nodeType = "trojan"
+	// default:
+	// 	return nil, fmt.Errorf("NodeType Error: %s", c.NodeType)
+	// }
+	// res, err := c.client.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"type":   nodeType,
+	// 		"nodeId": strconv.Itoa(c.NodeID),
+	// 	}).
+	// 	SetResult(&Response{}).
+	// 	ForceContentType("application/json").
+	// 	Get(path)
 
-	response, err := c.parseResponse(res, path, err)
-	if err != nil {
-		return nil, err
-	}
+	// response, err := c.parseResponse(res, path, err)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	ruleListResponse := new([]RuleItem)
+	// ruleListResponse := new([]RuleItem)
 
-	if err := json.Unmarshal(response.Data, ruleListResponse); err != nil {
-		return nil, fmt.Errorf("unmarshal %s failed: %s", reflect.TypeOf(ruleListResponse), err)
-	}
+	// if err := json.Unmarshal(response.Data, ruleListResponse); err != nil {
+	// 	return nil, fmt.Errorf("unmarshal %s failed: %s", reflect.TypeOf(ruleListResponse), err)
+	// }
 
-	for _, r := range *ruleListResponse {
-		ruleList = append(ruleList, api.DetectRule{
-			ID:      r.ID,
-			Pattern: regexp.MustCompile(r.Content),
-		})
-	}
-	return &ruleList, nil
+	// for _, r := range *ruleListResponse {
+	// 	ruleList = append(ruleList, api.DetectRule{
+	// 		ID:      r.ID,
+	// 		Pattern: regexp.MustCompile(r.Content),
+	// 	})
+	// }
+	// return &ruleList, nil
 }
 
 // ReportIllegal reports the user illegal behaviors

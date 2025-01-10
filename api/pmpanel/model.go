@@ -21,10 +21,10 @@ type NodeInfoResponse struct {
 
 // UserResponse is the response of user
 type UserResponse struct {
-	ID          int     `json:"id"`
-	Passwd      string  `json:"passwd"`
-	SpeedLimit  float64 `json:"nodeSpeedlimit"`
-	DeviceLimit int     `json:"nodeConnector"`
+	ID          string  `json:"id"`
+	Passwd      string  `json:"token"`
+	SpeedLimit  float64 `json:"speedLimit"`
+	DeviceLimit int     `json:"deviceLimit"`
 }
 
 // Response is the common response
@@ -36,7 +36,7 @@ type Response struct {
 // PostData is the data structure of post data
 type PostData struct {
 	Type    string      `json:"type"`
-	NodeId  int         `json:"nodeId"`
+	NodeId  string      `json:"nodeId"`
 	Users   interface{} `json:"users"`
 	Onlines interface{} `json:"onlines"`
 }
@@ -49,15 +49,15 @@ type SystemLoad struct {
 
 // OnlineUser is the data structure of online user
 type OnlineUser struct {
-	UID int    `json:"user_id"`
+	UID string `json:"userId"`
 	IP  string `json:"ip"`
 }
 
 // UserTraffic is the data structure of traffic
 type UserTraffic struct {
-	UID      int    `json:"id"`
-	Upload   int64  `json:"up"`
-	Download int64  `json:"down"`
+	UID      string `json:"userId"`
+	Upload   int64  `json:"upload"`
+	Download int64  `json:"download"`
 	Ip       string `json:"ip"`
 }
 
@@ -67,6 +67,6 @@ type RuleItem struct {
 }
 
 type IllegalItem struct {
-	ID  int `json:"list_id"`
-	UID int `json:"user_id"`
+	ID  int    `json:"list_id"`
+	UID string `json:"user_id"`
 }
