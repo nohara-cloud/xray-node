@@ -4,27 +4,28 @@ import "encoding/json"
 
 // NodeInfoResponse is the response of node
 type NodeInfoResponse struct {
-	Class           int     `json:"clazz"`
-	SpeedLimit      float64 `json:"speedlimit"`
-	Method          string  `json:"method"`
-	TrafficRate     float64 `json:"trafficRate"`
-	RawServerString string  `json:"outServer"`
-	Port            uint32  `json:"outPort"`
-	AlterId         uint16  `json:"alterId"`
-	Network         string  `json:"network"`
-	Security        string  `json:"security"`
-	Host            string  `json:"host"`
-	Path            string  `json:"path"`
-	Grpc            bool    `json:"grpc"`
-	Sni             string  `json:"sni"`
+	Port       uint32  `json:"port"`
+	Method     string  `json:"method"`
+	SpeedLimit float64 `json:"speed_limit"`
+	// Shadowsocks 2022 require server key
+	ServerKey string `json:"server_key"`
+	// TrafficRate     float64 `json:"trafficRate"`
+	// RawServerString string  `json:"outServer"`
+	// AlterId         uint16  `json:"alterId"`
+	// Network         string  `json:"network"`
+	// Security        string  `json:"security"`
+	// Host            string  `json:"host"`
+	// Path string `json:"path"`
+	// Grpc            bool    `json:"grpc"`
+	// Sni             string  `json:"sni"`
 }
 
 // UserResponse is the response of user
 type UserResponse struct {
 	ID          string  `json:"id"`
 	Passwd      string  `json:"token"`
-	SpeedLimit  float64 `json:"speedLimit"`
-	DeviceLimit int     `json:"deviceLimit"`
+	SpeedLimit  float64 `json:"speed_limit"`
+	DeviceLimit int     `json:"device_limit"`
 }
 
 // Response is the common response
