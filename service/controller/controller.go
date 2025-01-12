@@ -282,7 +282,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	} else {
 		var deleted, added []api.UserInfo
 		if usersChanged {
-			deleted, added = compareUserList(c.userList, newUserInfo)
+			deleted, added, _ = compareUserList(c.userList, newUserInfo)
 			if len(deleted) > 0 {
 				deletedEmail := make([]string, len(deleted))
 				for i, u := range deleted {
@@ -429,42 +429,37 @@ func (c *Controller) addNewUser(userInfo *[]api.UserInfo, nodeInfo *api.NodeInfo
 	return nil
 }
 
-func compareUserList(old, new *[]api.UserInfo) (deleted, added []api.UserInfo) {
-	mSrc := make(map[api.UserInfo]byte) // 按源数组建索引
-	mAll := make(map[api.UserInfo]byte) // 源+目所有元素建索引
+func compareUserList(old, new *[]api.UserInfo) (deleted, added, modified []api.UserInfo) {
+	// 使用唯一标识符（如 ID）作为 map 的键
+	oldMap := make(map[string]api.UserInfo)
+	newMap := make(map[string]api.UserInfo)
 
-	var set []api.UserInfo // 交集
+	// 建立索引
+	for _, user := range *old {
+		oldMap[user.UID] = user
+	}
+	for _, user := range *new {
+		newMap[user.UID] = user
+	}
 
-	// 1.源数组建立map
-	for _, v := range *old {
-		mSrc[v] = 0
-		mAll[v] = 0
-	}
-	// 2.目数组中，存不进去，即重复元素，所有存不进去的集合就是并集
-	for _, v := range *new {
-		l := len(mAll)
-		mAll[v] = 1
-		if l != len(mAll) { // 长度变化，即可以存
-			l = len(mAll)
-		} else { // 存不了，进并集
-			set = append(set, v)
-		}
-	}
-	// 3.遍历交集，在并集中找，找到就从并集中删，删完后就是补集（即并-交=所有变化的元素）
-	for _, v := range set {
-		delete(mAll, v)
-	}
-	// 4.此时，mall是补集，所有元素去源中找，找到就是删除的，找不到的必定能在目数组中找到，即新加的
-	for v := range mAll {
-		_, exist := mSrc[v]
-		if exist {
-			deleted = append(deleted, v)
-		} else {
-			added = append(added, v)
+	// 找出删除的元素
+	for id, oldUser := range oldMap {
+		if _, exists := newMap[id]; !exists {
+			deleted = append(deleted, oldUser)
 		}
 	}
 
-	return deleted, added
+	// 找出新增和修改的元素
+	for id, newUser := range newMap {
+		oldUser, exists := oldMap[id]
+		if !exists {
+			added = append(added, newUser)
+		} else if !reflect.DeepEqual(oldUser, newUser) {
+			modified = append(modified, newUser)
+		}
+	}
+
+	return deleted, added, modified
 }
 
 func limitUser(c *Controller, user api.UserInfo, silentUsers *[]api.UserInfo) {
