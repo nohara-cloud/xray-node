@@ -84,7 +84,7 @@ before_show_menu() {
 }
 
 install() {
-    bash <(curl -Ls https://raw.githubusercontent.com/nohara-cloud/nohara-node-release/master/release/release/install.sh)
+    bash <(curl -Ls https://github.com/nohara-cloud/nohara-node/raw/master/release/install.sh)
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -108,7 +108,7 @@ update() {
 #        fi
 #        return 0
 #    fi
-    bash <(curl -Ls https://raw.githubusercontent.com/nohara-cloud/nohara-node/master/release/install.sh) $version
+    bash <(curl -Ls https://github.com/nohara-cloud/nohara-node/raw/master/release/install.sh) $version
     if [[ $? == 0 ]]; then
         echo -e "${green}更新完成，已自动重启 Nohara Node，请使用 Nohara Node log 查看运行日志${plain}"
         exit
@@ -121,7 +121,7 @@ update() {
 
 config() {
     echo "Nohara Node 在修改配置后会自动尝试重启"
-    vi /etc/nohara-cloud/config.yml
+    vi /etc/nohara-node/config.yml
     sleep 2
     check_status
     case $? in
@@ -157,7 +157,7 @@ uninstall() {
     rm /etc/nohara-node/ -rf
 
     echo ""
-    echo -e "卸载成功，如果你想删除此脚本，则退出脚本后运行 ${green}rm /usr/bin/nohara-cloud -f${plain} 进行删除"
+    echo -e "卸载成功，如果你想删除此脚本，则退出脚本后运行 ${green}rm /usr/bin/nanode -f${plain} 进行删除"
     echo ""
 
     if [[ $# == 0 ]]; then
@@ -269,7 +269,7 @@ install_bbr() {
 }
 
 update_shell() {
-    wget -O /usr/bin/nanode -N --no-check-certificate https://raw.githubusercontent.com/nohara-cloud/nohara-node/master/release/nanode.sh
+    wget -O /usr/bin/nanode -N --no-check-certificate https://github.com/nohara-cloud/nohara-node/raw/master/release/nanode.sh
     if [[ $? != 0 ]]; then
         echo ""
         echo -e "${red}下载脚本失败，请检查本机能否连接 Github${plain}"

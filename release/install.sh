@@ -137,9 +137,12 @@ install_nohara_node() {
         fi
     fi
 
-    unzip nohara-node-linux.zip
+    unzip nohara-node-linux.zip -d /tmp/nohara-node
     rm nohara-node-linux.zip -f
-    chmod +x nohara-node
+    # Setup binary
+    chmod +x /tmp/nohara-node/nohara-node
+    mv /tmp/nohara-node/nohara-node /usr/local/bin/nohara-node
+    # Setup service
     rm /etc/systemd/system/nohara-node.service -f
     file="https://github.com/nohara-cloud/nohara-node/raw/master/release/nohara-node.service"
     wget -q -N --no-check-certificate -O /etc/systemd/system/nohara-node.service ${file}
@@ -147,13 +150,15 @@ install_nohara_node() {
     systemctl stop nohara-node
     systemctl enable nohara-node
     echo -e "${green}Nohara Node ${last_version}${plain} 安装完成，已设置开机自启"
-    cp geoip.dat /etc/nohara-node/
-    cp geosite.dat /etc/nohara-node/ 
+    # Setup geoip.dat and geosite.dat
+    cp /tmp/nohara-node/geoip.dat /etc/nohara-node/
+    cp /tmp/nohara-node/geosite.dat /etc/nohara-node/ 
 
+    # Won't override user exist config file
     if [[ ! -f /etc/nohara-node/config.yml ]]; then
         cp config.yml /etc/nohara-node/
         echo -e ""
-        echo -e "全新安装，请先参看教程：https://github.com/nohara-cloud/nohara-node，配置必要的内容"
+        echo -e "全新安装，请先参看教程：https://nohara.tech，配置必要的内容"
     else
         systemctl start nohara-node
         sleep 2
@@ -165,26 +170,26 @@ install_nohara_node() {
             echo -e "${red}Nohara Node 可能启动失败，请稍后使用 nohara-node log 查看日志信息，若无法启动，则可能更改了配置格式，请前往 wiki 查看：https://github.com/nohara-cloud/nohara-node/wiki${plain}"
         fi
     fi
-
     if [[ ! -f /etc/nohara-node/dns.json ]]; then
-        cp dns.json /etc/nohara-node/
+        cp /tmp/nohara-node/dns.json /etc/nohara-node/
     fi
     if [[ ! -f /etc/nohara-node/route.json ]]; then
-        cp route.json /etc/nohara-node/
+        cp /tmp/nohara-node/route.json /etc/nohara-node/
     fi
     if [[ ! -f /etc/nohara-node/custom_outbound.json ]]; then
-        cp custom_outbound.json /etc/nohara-node/
+        cp /tmp/nohara-node/custom_outbound.json /etc/nohara-node/
     fi
     if [[ ! -f /etc/nohara-node/custom_inbound.json ]]; then
-        cp custom_inbound.json /etc/nohara-node/
+        cp /tmp/nohara-node/custom_inbound.json /etc/nohara-node/
     fi
     if [[ ! -f /etc/nohara-node/rulelist ]]; then
-        cp rulelist /etc/nohara-node/
+        cp /tmp/nohara-node/rulelist /etc/nohara-node/
     fi
-    curl -o /usr/bin/nanode -Ls https://raw.githubusercontent.com/nohara-cloud/nohara-node-release/master/release/nanode.sh
+
+    curl -o /usr/bin/nanode -Ls https://github.com/nohara-cloud/nohara-node/raw/master/release/nanode.sh
     chmod +x /usr/bin/nanode
     cd $cur_dir
-    # rm -f install.sh
+    
     echo -e ""
     echo "Nohara Node 管理脚本 nanode 使用方法: "
     echo "------------------------------------------"
