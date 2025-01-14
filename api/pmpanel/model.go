@@ -1,7 +1,5 @@
 package pmpanel
 
-import "encoding/json"
-
 // NodeInfoResponse is the response of node
 type NodeInfoResponse struct {
 	Port       uint32  `json:"port"`
@@ -28,38 +26,33 @@ type UserResponse struct {
 	DeviceLimit int     `json:"device_limit"`
 }
 
-// Response is the common response
-type Response struct {
-	Ret  uint            `json:"ret"`
-	Data json.RawMessage `json:"data"`
-}
-
-// PostData is the data structure of post data
-type PostData struct {
-	Type    string      `json:"type"`
-	NodeId  string      `json:"nodeId"`
-	Users   interface{} `json:"users"`
-	Onlines interface{} `json:"onlines"`
-}
-
-// SystemLoad is the data structure of systemload
-type SystemLoad struct {
-	Uptime string `json:"uptime"`
-	Load   string `json:"load"`
-}
-
 // OnlineUser is the data structure of online user
 type OnlineUser struct {
-	UID string `json:"userId"`
+	UID string `json:"user_id"`
 	IP  string `json:"ip"`
+}
+
+type OnlineUserPostData struct {
+	Online []OnlineUser `json:"online"`
 }
 
 // UserTraffic is the data structure of traffic
 type UserTraffic struct {
-	UID      string `json:"userId"`
+	UID      string `json:"user_id"`
 	Upload   int64  `json:"upload"`
 	Download int64  `json:"download"`
-	Ip       string `json:"ip"`
+}
+
+type TrafficPostData struct {
+	Traffic []UserTraffic `json:"traffic"`
+}
+
+// NodeStatus is the data structure of node status
+type NodeStatus struct {
+	CPU    float64 `json:"cpu"`
+	Mem    float64 `json:"mem"`
+	Disk   float64 `json:"disk"`
+	Uptime uint64  `json:"uptime"`
 }
 
 type RuleItem struct {

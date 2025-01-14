@@ -216,34 +216,43 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 
 // ReportNodeStatus reports the node status to the sspanel
 func (c *APIClient) ReportNodeStatus(nodeStatus *api.NodeStatus) (err error) {
+
+	data := &NodeStatus{
+		CPU:    nodeStatus.CPU,
+		Mem:    nodeStatus.Mem,
+		Disk:   nodeStatus.Disk,
+		Uptime: nodeStatus.Uptime,
+	}
+
+	path := "/api/node/status"
+	res, err := c.client.R().
+		ForceContentType("application/json").
+		SetBody(data).
+		Post(path)
+
+	_, err = c.parseResponse(res, path, err)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 // ReportNodeOnlineUsers reports online user ip
 func (c *APIClient) ReportNodeOnlineUsers(onlineUserList *[]api.OnlineUser) error {
-	var nodeType = ""
-	switch c.NodeType {
-	case "Shadowsocks":
-		nodeType = "ss"
-	case "V2ray":
-		nodeType = "v2ray"
-	case "Trojan":
-		nodeType = "trojan"
-	default:
-		return fmt.Errorf("NodeType Error: %s", c.NodeType)
-	}
 	data := make([]OnlineUser, len(*onlineUserList))
 	for i, user := range *onlineUserList {
 		data[i] = OnlineUser{UID: user.UID, IP: user.IP}
 	}
-	postData := &PostData{Type: nodeType, NodeId: c.NodeID, Onlines: data}
-	path := "/api/node/user/online"
 
+	postData := &OnlineUserPostData{Online: data}
+	path := "/api/node/user/online"
 	res, err := c.client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(postData).
 		ForceContentType("application/json").
 		Post(path)
+
 	_, err = c.parseResponse(res, path, err)
 	if err != nil {
 		return err
@@ -254,17 +263,6 @@ func (c *APIClient) ReportNodeOnlineUsers(onlineUserList *[]api.OnlineUser) erro
 
 // ReportUserTraffic reports the user traffic
 func (c *APIClient) ReportUserTraffic(userTraffic *[]api.UserTraffic) error {
-	var nodeType = ""
-	switch c.NodeType {
-	case "Shadowsocks":
-		nodeType = "ss"
-	case "V2ray":
-		nodeType = "v2ray"
-	case "Trojan":
-		nodeType = "trojan"
-	default:
-		return fmt.Errorf("NodeType Error: %s", c.NodeType)
-	}
 	data := make([]UserTraffic, len(*userTraffic))
 	for i, traffic := range *userTraffic {
 		data[i] = UserTraffic{
@@ -273,14 +271,15 @@ func (c *APIClient) ReportUserTraffic(userTraffic *[]api.UserTraffic) error {
 			Download: traffic.Download,
 		}
 	}
-	postData := &PostData{Type: nodeType, NodeId: c.NodeID, Users: data}
-	path := "/api/node/user/traffic"
 
+	postData := &TrafficPostData{Traffic: data}
+	path := "/api/node/user/traffic"
 	res, err := c.client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(postData).
 		ForceContentType("application/json").
 		Post(path)
+
 	_, err = c.parseResponse(res, path, err)
 	if err != nil {
 		return err
@@ -291,25 +290,10 @@ func (c *APIClient) ReportUserTraffic(userTraffic *[]api.UserTraffic) error {
 
 // GetNodeRule will pull the audit rule form pmpanel
 func (c *APIClient) GetNodeRule() (*[]api.DetectRule, error) {
-	return nil, nil
-	// ruleList := c.LocalRuleList
+	ruleList := c.LocalRuleList
+	return &ruleList, nil
 	// path := "/api/rules"
-	// var nodeType = ""
-	// switch c.NodeType {
-	// case "Shadowsocks":
-	// 	nodeType = "ss"
-	// case "V2ray":
-	// 	nodeType = "v2ray"
-	// case "Trojan":
-	// 	nodeType = "trojan"
-	// default:
-	// 	return nil, fmt.Errorf("NodeType Error: %s", c.NodeType)
-	// }
 	// res, err := c.client.R().
-	// 	SetQueryParams(map[string]string{
-	// 		"type":   nodeType,
-	// 		"nodeId": strconv.Itoa(c.NodeID),
-	// 	}).
 	// 	SetResult(&Response{}).
 	// 	ForceContentType("application/json").
 	// 	Get(path)
