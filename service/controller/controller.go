@@ -602,8 +602,9 @@ func (c *Controller) userInfoMonitor() (err error) {
 	return nil
 }
 
+// Cache tag: nodeID:nodeType
 func (c *Controller) buildNodeTag() string {
-	return fmt.Sprintf("%s_%s_%d", c.nodeInfo.NodeType, c.config.ListenIP, c.nodeInfo.Port)
+	return fmt.Sprintf("%s:%s", c.nodeInfo.NodeID, c.nodeInfo.NodeType)
 }
 
 // func (c *Controller) logPrefix() string {
