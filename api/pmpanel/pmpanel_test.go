@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/XrayR-project/XrayR/api"
-	"github.com/XrayR-project/XrayR/api/pmpanel"
+	"github.com/nohara-cloud/nohara-node/api"
+	"github.com/nohara-cloud/nohara-node/api/pmpanel"
 )
 
 func CreateClient() api.API {

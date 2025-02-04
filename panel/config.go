@@ -1,8 +1,8 @@
 package panel
 
 import (
-	"github.com/XrayR-project/XrayR/api"
-	"github.com/XrayR-project/XrayR/service/controller"
+	"github.com/nohara-cloud/nohara-node/api"
+	"github.com/nohara-cloud/nohara-node/service/controller"
 )
 
 type Config struct {

@@ -17,7 +17,7 @@ import (
 	"github.com/xtls/xray-core/proxy/trojan"
 	"github.com/xtls/xray-core/proxy/vless"
 
-	"github.com/XrayR-project/XrayR/api"
+	"github.com/nohara-cloud/nohara-node/api"
 )
 
 var AEADMethod = map[shadowsocks.CipherType]uint8{

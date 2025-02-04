@@ -156,7 +156,7 @@ install_nohara_node() {
 
     # Won't override user exist config file
     if [[ ! -f /etc/nohara-node/config.yml ]]; then
-        cp config.yml /etc/nohara-node/
+        cp /tmp/nohara-node/config.yml /etc/nohara-node/
         echo -e ""
         echo -e "全新安装，请先参看教程：https://nohara.tech，配置必要的内容"
     else

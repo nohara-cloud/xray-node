@@ -1,4 +1,4 @@
-module github.com/XrayR-project/XrayR
+module github.com/nohara-cloud/nohara-node
 
 go 1.22.0
 
