@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	version  = "0.9.8"
+	version  = "0.9.9"
 	codename = "nohara-cloud"
 	intro    = "The backend of nohara-cloud panel, powered by Xray"
 )

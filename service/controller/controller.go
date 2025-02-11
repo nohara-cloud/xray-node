@@ -282,11 +282,11 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	} else {
 		var deleted, added []api.UserInfo
 		if usersChanged {
-			deleted, added, _ = compareUserList(c.userList, newUserInfo)
+			deleted, added, modified := compareUserList(c.userList, newUserInfo)
 			if len(deleted) > 0 {
 				deletedEmail := make([]string, len(deleted))
 				for i, u := range deleted {
-					deletedEmail[i] = fmt.Sprintf("%s|%s|%d", c.Tag, u.Email, u.UID)
+					deletedEmail[i] = fmt.Sprintf("%s|%s|%s", c.Tag, u.Email, u.UID)
 				}
 				err := c.removeUsers(deletedEmail, c.Tag)
 				if err != nil {
@@ -300,6 +300,16 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 				}
 				// Update Limiter
 				if err := c.UpdateInboundLimiter(c.Tag, &added); err != nil {
+					c.logger.Print(err)
+				}
+			}
+			if len(modified) > 0 {
+				err = c.addNewUser(&modified, c.nodeInfo)
+				if err != nil {
+					c.logger.Print(err)
+				}
+				// Update Limiter for modified users
+				if err := c.UpdateInboundLimiter(c.Tag, &modified); err != nil {
 					c.logger.Print(err)
 				}
 			}
@@ -455,6 +465,7 @@ func compareUserList(old, new *[]api.UserInfo) (deleted, added, modified []api.U
 		if !exists {
 			added = append(added, newUser)
 		} else if !reflect.DeepEqual(oldUser, newUser) {
+			deleted = append(deleted, oldUser)
 			modified = append(modified, newUser)
 		}
 	}
