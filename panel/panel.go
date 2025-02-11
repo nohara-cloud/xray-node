@@ -14,12 +14,12 @@ import (
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/infra/conf"
 
-	"github.com/nohara-cloud/nohara-node/api"
-	"github.com/nohara-cloud/nohara-node/api/pmpanel"
-	"github.com/nohara-cloud/nohara-node/app/mydispatcher"
-	_ "github.com/nohara-cloud/nohara-node/cmd/distro/all"
-	"github.com/nohara-cloud/nohara-node/service"
-	"github.com/nohara-cloud/nohara-node/service/controller"
+	"github.com/nohara-cloud/nboard-node/api"
+	"github.com/nohara-cloud/nboard-node/api/pmpanel"
+	"github.com/nohara-cloud/nboard-node/app/mydispatcher"
+	_ "github.com/nohara-cloud/nboard-node/cmd/distro/all"
+	"github.com/nohara-cloud/nboard-node/service"
+	"github.com/nohara-cloud/nboard-node/service/controller"
 )
 
 // Panel Structure

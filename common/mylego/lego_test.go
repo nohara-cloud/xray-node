@@ -3,7 +3,7 @@ package mylego_test
 import (
 	"testing"
 
-	"github.com/nohara-cloud/nohara-node/common/mylego"
+	"github.com/nohara-cloud/nboard-node/common/mylego"
 )
 
 func TestLegoClient(t *testing.T) {

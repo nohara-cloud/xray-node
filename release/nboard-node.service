@@ -1,5 +1,5 @@
 [Unit]
-Description=Nohara Node Service
+Description=Nboard Node Service
 After=network.target nss-lookup.target
 Wants=network.target
 
@@ -11,8 +11,8 @@ LimitAS=infinity
 LimitRSS=infinity
 LimitCORE=infinity
 LimitNOFILE=999999
-WorkingDirectory=/etc/nohara-node/
-ExecStart=/usr/local/bin/nohara-node -c /etc/nohara-node/config.yml
+WorkingDirectory=/etc/nboard-node/
+ExecStart=/usr/local/bin/nboard-node -c /etc/nboard-node/config.yml
 Restart=always
 RestartSec=10
 

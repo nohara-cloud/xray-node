@@ -26,8 +26,8 @@ import (
 	"github.com/xtls/xray-core/transport"
 	"github.com/xtls/xray-core/transport/pipe"
 
-	"github.com/nohara-cloud/nohara-node/common/limiter"
-	"github.com/nohara-cloud/nohara-node/common/rule"
+	"github.com/nohara-cloud/nboard-node/common/limiter"
+	"github.com/nohara-cloud/nboard-node/common/rule"
 )
 
 var errSniffingTimeout = newError("timeout on sniffing")

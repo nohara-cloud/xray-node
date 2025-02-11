@@ -14,7 +14,7 @@ import (
 
 	"github.com/go-resty/resty/v2"
 
-	"github.com/nohara-cloud/nohara-node/api"
+	"github.com/nohara-cloud/nboard-node/api"
 )
 
 // APIClient create a api client to the panel.

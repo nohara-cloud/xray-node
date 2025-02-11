@@ -1,6 +1,6 @@
 package panel
 
-import "github.com/nohara-cloud/nohara-node/service/controller"
+import "github.com/nohara-cloud/nboard-node/service/controller"
 
 func getDefaultLogConfig() *LogConfig {
 	return &LogConfig{

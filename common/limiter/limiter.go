@@ -19,7 +19,7 @@ import (
 	"github.com/xtls/xray-core/common/errors"
 	"golang.org/x/time/rate"
 
-	"github.com/nohara-cloud/nohara-node/api"
+	"github.com/nohara-cloud/nboard-node/api"
 )
 
 type UserInfo struct {

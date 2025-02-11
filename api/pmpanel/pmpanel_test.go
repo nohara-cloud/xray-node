@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nohara-cloud/nohara-node/api"
-	"github.com/nohara-cloud/nohara-node/api/pmpanel"
+	"github.com/nohara-cloud/nboard-node/api"
+	"github.com/nohara-cloud/nboard-node/api/pmpanel"
 )
 
 func CreateClient() api.API {

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package xrayr.app.mydispatcher;
 option csharp_namespace = "XrayR.App.Mydispatcher";
-option go_package = "github.com/nohara-cloud/nohara-node/app/mydispatcher";
+option go_package = "github.com/nohara-cloud/nboard-node/app/mydispatcher";
 option java_package = "com.xrayr.app.mydispatcher";
 option java_multiple_files = true;
 

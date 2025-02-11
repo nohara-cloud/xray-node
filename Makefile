@@ -1,10 +1,10 @@
 .PHONY: build
 build:
-	go build -v -o nohara-node -trimpath -ldflags "-s -w -buildid="
+	go build -v -o nboard-node -trimpath -ldflags "-s -w -buildid="
 
 .PHONY: clean
 clean:
-	rm -rf nohara-node
+	rm -rf nboard-node
 
 .PHONY: test
 test:
