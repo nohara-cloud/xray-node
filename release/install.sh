@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Constants
-readonly GITHUB_BASE_URL="https://github.com/nohara-cloud/nohara-node"
-readonly GITHUB_API_URL="https://api.github.com/repos/nohara-cloud/nohara-node/releases/latest"
+readonly GITHUB_BASE_URL="https://github.com/nohara-cloud/nboard-node"
+readonly GITHUB_API_URL="https://api.github.com/repos/nohara-cloud/nboard-node/releases/latest"
 readonly GITHUB_DOWNLOAD_URL="${GITHUB_BASE_URL}/releases/download"
-readonly SERVICE_FILE_URL="${GITHUB_BASE_URL}/raw/master/release/nohara-node.service"
-readonly NANODE_SCRIPT_URL="${GITHUB_BASE_URL}/raw/master/release/nanode.sh"
+readonly SERVICE_FILE_URL="${GITHUB_BASE_URL}/raw/master/release/nboard-node.service"
+readonly nbnode_SCRIPT_URL="${GITHUB_BASE_URL}/raw/master/release/nbnode.sh"
 
 # Configuration paths
-readonly INSTALL_DIR="/etc/nohara-node"
-readonly BIN_PATH="/usr/local/bin/nohara-node"
-readonly SERVICE_PATH="/etc/systemd/system/nohara-node.service"
+readonly INSTALL_DIR="/etc/nboard-node"
+readonly BIN_PATH="/usr/local/bin/nboard-node"
+readonly SERVICE_PATH="/etc/systemd/system/nboard-node.service"
 readonly CONFIG_FILES=(
     "config.yml"
     "dns.json"
@@ -137,10 +137,10 @@ get_latest_version() {
 download_and_install() {
     local version=$1
     local arch=$2
-    local download_url="${GITHUB_DOWNLOAD_URL}/${version}/nohara-node-linux-${arch}.zip"
+    local download_url="${GITHUB_DOWNLOAD_URL}/${version}/nboard-node-linux-${arch}.zip"
     
-    log_info "下载 Nohara Node ${version}..."
-    wget -q -N --no-check-certificate -O "${INSTALL_DIR}/nohara-node-linux.zip" "$download_url"
+    log_info "下载 Nboard Node ${version}..."
+    wget -q -N --no-check-certificate -O "${INSTALL_DIR}/nboard-node-linux.zip" "$download_url"
     
     if [[ $? -ne 0 ]]; then
         log_error "下载失败，请检查网络连接和版本号！"
@@ -148,9 +148,9 @@ download_and_install() {
     fi
     
     # Extract and install
-    unzip -q "${INSTALL_DIR}/nohara-node-linux.zip" -d /tmp/nohara-node
-    chmod +x /tmp/nohara-node/nohara-node
-    mv /tmp/nohara-node/nohara-node "$BIN_PATH"
+    unzip -q "${INSTALL_DIR}/nboard-node-linux.zip" -d /tmp/nboard-node
+    chmod +x /tmp/nboard-node/nboard-node
+    mv /tmp/nboard-node/nboard-node "$BIN_PATH"
     
     # Install service file
     wget -q -N --no-check-certificate -O "$SERVICE_PATH" "$SERVICE_FILE_URL"
@@ -159,50 +159,50 @@ download_and_install() {
     # Copy configuration files
     for file in "${CONFIG_FILES[@]}"; do
         if [[ ! -f "${INSTALL_DIR}/${file}" ]]; then
-            cp "/tmp/nohara-node/${file}" "${INSTALL_DIR}/" 2>/dev/null || true
+            cp "/tmp/nboard-node/${file}" "${INSTALL_DIR}/" 2>/dev/null || true
         fi
     done
     
     # Cleanup
-    rm -f "${INSTALL_DIR}/nohara-node-linux.zip"
-    rm -rf /tmp/nohara-node
+    rm -f "${INSTALL_DIR}/nboard-node-linux.zip"
+    rm -rf /tmp/nboard-node
 }
 
 setup_service() {
-    systemctl stop nohara-node 2>/dev/null
-    systemctl enable nohara-node
-    systemctl start nohara-node
+    systemctl stop nboard-node 2>/dev/null
+    systemctl enable nboard-node
+    systemctl start nboard-node
     
     sleep 2
-    if systemctl is-active nohara-node >/dev/null 2>&1; then
-        log_info "Nohara Node 服务启动成功！"
+    if systemctl is-active nboard-node >/dev/null 2>&1; then
+        log_info "Nboard Node 服务启动成功！"
     else
-        log_warn "Nohara Node 服务可能启动失败，请检查日志"
+        log_warn "Nboard Node 服务可能启动失败，请检查日志"
     fi
 }
 
 install_management_script() {
-    curl -o /usr/bin/nanode -Ls "$NANODE_SCRIPT_URL"
-    chmod +x /usr/bin/nanode
+    curl -o /usr/bin/nbnode -Ls "$nbnode_SCRIPT_URL"
+    chmod +x /usr/bin/nbnode
 }
 
 print_usage() {
-    echo "Nohara Node 管理脚本使用方法: "
+    echo "Nboard Node 管理脚本使用方法: "
     echo "------------------------------------------"
-    echo "nanode                    - 显示管理菜单 (功能更多)"
-    echo "nanode start              - 启动 nohara-node"
-    echo "nanode stop               - 停止 nohara-node"
-    echo "nanode restart            - 重启 nohara-node"
-    echo "nanode status             - 查看 nohara-node 状态"
-    echo "nanode enable             - 设置 nohara-node 开机自启"
-    echo "nanode disable            - 取消 nohara-node 开机自启"
-    echo "nanode log                - 查看 nohara-node 日志"
-    echo "nanode update             - 更新 nohara-node"
-    echo "nanode update x.x.x       - 更新 nohara-node 指定版本"
-    echo "nanode config             - 显示配置文件内容"
-    echo "nanode install            - 安装 nohara-node"
-    echo "nanode uninstall          - 卸载 nohara-node"
-    echo "nanode version            - 查看 nohara-node 版本"
+    echo "nbnode                    - 显示管理菜单 (功能更多)"
+    echo "nbnode start              - 启动 nboard-node"
+    echo "nbnode stop               - 停止 nboard-node"
+    echo "nbnode restart            - 重启 nboard-node"
+    echo "nbnode status             - 查看 nboard-node 状态"
+    echo "nbnode enable             - 设置 nboard-node 开机自启"
+    echo "nbnode disable            - 取消 nboard-node 开机自启"
+    echo "nbnode log                - 查看 nboard-node 日志"
+    echo "nbnode update             - 更新 nboard-node"
+    echo "nbnode update x.x.x       - 更新 nboard-node 指定版本"
+    echo "nbnode config             - 显示配置文件内容"
+    echo "nbnode install            - 安装 nboard-node"
+    echo "nbnode uninstall          - 卸载 nboard-node"
+    echo "nbnode version            - 查看 nboard-node 版本"
     echo "------------------------------------------"
 }
 
@@ -210,7 +210,7 @@ print_usage() {
 main() {
     local version=$1
     
-    log_info "开始安装 Nohara Node..."
+    log_info "开始安装 Nboard Node..."
     
     # System checks
     check_root

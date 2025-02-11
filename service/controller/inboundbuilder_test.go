@@ -3,9 +3,9 @@ package controller_test
 import (
 	"testing"
 
-	"github.com/nohara-cloud/nohara-node/api"
-	"github.com/nohara-cloud/nohara-node/common/mylego"
-	. "github.com/nohara-cloud/nohara-node/service/controller"
+	"github.com/nohara-cloud/nboard-node/api"
+	"github.com/nohara-cloud/nboard-node/common/mylego"
+	. "github.com/nohara-cloud/nboard-node/service/controller"
 )
 
 func TestBuildV2ray(t *testing.T) {

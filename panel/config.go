@@ -1,8 +1,8 @@
 package panel
 
 import (
-	"github.com/nohara-cloud/nohara-node/api"
-	"github.com/nohara-cloud/nohara-node/service/controller"
+	"github.com/nohara-cloud/nboard-node/api"
+	"github.com/nohara-cloud/nboard-node/service/controller"
 )
 
 type Config struct {
