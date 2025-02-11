@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/nohara-cloud/nohara-node/panel"
+	"github.com/nohara-cloud/nboard-node/panel"
 )
 
 var (

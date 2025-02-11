@@ -1,4 +1,4 @@
-module github.com/nohara-cloud/nohara-node
+module github.com/nohara-cloud/nboard-node
 
 go 1.22.0
 

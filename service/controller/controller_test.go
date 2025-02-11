@@ -11,11 +11,11 @@ import (
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/infra/conf"
 
-	"github.com/nohara-cloud/nohara-node/api"
-	// "github.com/nohara-cloud/nohara-node/api/sspanel"
-	_ "github.com/nohara-cloud/nohara-node/cmd/distro/all"
-	"github.com/nohara-cloud/nohara-node/common/mylego"
-	. "github.com/nohara-cloud/nohara-node/service/controller"
+	"github.com/nohara-cloud/nboard-node/api"
+	// "github.com/nohara-cloud/nboard-node/api/sspanel"
+	_ "github.com/nohara-cloud/nboard-node/cmd/distro/all"
+	"github.com/nohara-cloud/nboard-node/common/mylego"
+	. "github.com/nohara-cloud/nboard-node/service/controller"
 )
 
 func TestController(t *testing.T) {

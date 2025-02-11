@@ -11,8 +11,8 @@ import (
 	"github.com/xtls/xray-core/features/stats"
 	"github.com/xtls/xray-core/proxy"
 
-	"github.com/nohara-cloud/nohara-node/api"
-	"github.com/nohara-cloud/nohara-node/common/limiter"
+	"github.com/nohara-cloud/nboard-node/api"
+	"github.com/nohara-cloud/nboard-node/common/limiter"
 )
 
 func (c *Controller) removeInbound(tag string) error {

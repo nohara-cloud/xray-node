@@ -11,7 +11,7 @@ gen
 *.out
 go.work
 main
-nohara-node
+nboard-node
 access.log
 error.log
 .lego

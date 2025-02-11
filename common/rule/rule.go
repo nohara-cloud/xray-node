@@ -12,7 +12,7 @@ import (
 	mapset "github.com/deckarep/golang-set"
 	"github.com/xtls/xray-core/common/errors"
 
-	"github.com/nohara-cloud/nohara-node/api"
+	"github.com/nohara-cloud/nboard-node/api"
 )
 
 type Manager struct {

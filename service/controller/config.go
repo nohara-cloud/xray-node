@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/nohara-cloud/nohara-node/common/limiter"
-	"github.com/nohara-cloud/nohara-node/common/mylego"
+	"github.com/nohara-cloud/nboard-node/common/limiter"
+	"github.com/nohara-cloud/nboard-node/common/mylego"
 )
 
 type Config struct {
